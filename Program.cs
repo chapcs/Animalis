@@ -2,8 +2,34 @@
 {
     private static void Main(string[] args)
     {
-        Console.WriteLine("Hello, World!");
+        Animal[] animals =
+        {
+            new Hippo(),
+            new Wolf(false),
+            new Wolf(true),
+            new Hippo(),
+            new Wolf(false),
+        };
+        foreach (var animal in animals)
+        {
+            animal.MakeNoise();
+            if (animal is ISwimmer swimmer)
+                swimmer.Swim();
+            if (animal is IPackHunter hunter)
+                hunter.HuntInPack();
+            Console.WriteLine();
+        }
     }
+}
+
+interface ISwimmer
+{
+    void Swim();
+}
+
+interface IPackHunter
+{
+    void HuntInPack();
 }
 
 abstract class Animal
@@ -11,7 +37,7 @@ abstract class Animal
     public abstract void MakeNoise();
 }
 
-class Hippo : Animal
+class Hippo : Animal, ISwimmer
 {
     public override void MakeNoise()
     {
@@ -28,7 +54,7 @@ abstract class Canine : Animal
     public bool BelongsToPack { get; protected set; } = false;//why is this set equal to false
 }
 
-class Wolf : Canine
+class Wolf : Canine, IPackHunter
 {
     public Wolf(bool belongsToPack)
     {
@@ -44,6 +70,9 @@ class Wolf : Canine
 
     public void HuntInPack()
     {
-
+        if (BelongsToPack)
+            Console.WriteLine("Going hunting with my pack.");
+        else
+            Console.WriteLine("Not in a pack.");
     }
 }
